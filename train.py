@@ -15,6 +15,11 @@ import pandas
 from experiment_config import config
 from datetime import datetime
 import argparse
+import new_loss
+import combining_loss
+from models.res_net import ResNet3D_MC3
+from focal_loss import FocalLoss
+
 
 torch.backends.cudnn.benchmark = True
 
@@ -108,16 +113,25 @@ def train(
 
     if config.MODE == "2D":
         model = ResNet18().to(device)
+    # elif config.MODE == "3D":
+    #     model = I3D(
+    #         num_classes=1,
+    #         input_channels=3,
+    #         pre_trained=True,
+    #         freeze_bn=True,
+    #     ).to(device)
     elif config.MODE == "3D":
-        model = I3D(
+        model = ResNet3D_MC3(
             num_classes=1,
-            input_channels=3,
-            pre_trained=True,
-            freeze_bn=True,
+            pretrained=True,
         ).to(device)
 
-    loss_function = torch.nn.BCEWithLogitsLoss()
-    optimizer = torch.optim.Adam(
+
+    #loss_function = torch.nn.BCEWithLogitsLoss()
+    loss_function = torch.nn.BCEWithLogitsLoss(pos_weight=torch.tensor([10.0], device=device))
+    #loss_function = FocalLoss(alpha=0.25, gamma=2.0).to(device)
+    #loss_function = combining_loss.ComboLoss(alpha=0.3, gamma=2.0, dice_weight=0.0).to(device)
+    optimizer = torch.optim.AdamW(
         model.parameters(),
         lr=config.LEARNING_RATE,
         weight_decay=config.WEIGHT_DECAY,

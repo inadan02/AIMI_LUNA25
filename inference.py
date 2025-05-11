@@ -251,6 +251,6 @@ def _show_torch_cuda_info():
 
 if __name__ == "__main__":
     mode = "3D"
-    model_name = "LUNA25-baseline-3D-20250423"
+    model_name = "LUNA25-baseline-3D-20250509"
     raise SystemExit(run(mode= mode,
                          model_name=model_name))
