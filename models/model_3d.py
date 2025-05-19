@@ -527,7 +527,7 @@ if __name__ == "__main__":
         num_classes=1,
         input_channels=3,
         pre_trained=True,
-        freeze_bn=True,
+        freeze_bn=False,
     ).cuda()
 
     for i in range(10):
