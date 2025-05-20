@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: nvidia/cuda:12.9.0-cudnn-devel-ubuntu22.04
+
+%files
+    # Copy requirements.txt from host into container
+    ../requirements.txt /opt/requirements.txt
+
+%post
+    # Install system dependencies
+    apt-get update && apt-get install -y --no-install-recommends \
+        python3 \
+        python3-pip \
+        && rm -rf /var/lib/apt/lists/*
+       
+    # Make python3 the default
+    ln -s /usr/bin/python3 /usr/bin/python
+
+    # Install PyTorch with pip (adjust version as needed)
+    pip install --upgrade pip
+
+    pip install --no-cache-dir -r /opt/requirements.txt
+
+    # Clean up to reduce image size
+    apt-get clean && \
+    rm -f /opt/requirements.txt
+
+%environment
+    # Set environment variables (e.g., for CUDA)
+    export LC_ALL=C
+    export PATH=/usr/local/bin:$PATH
+
+%runscript
+    # Default command when container is executed
+    echo "PyTorch container with CUDA support"
+    python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
+    python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"

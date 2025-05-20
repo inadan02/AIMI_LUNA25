@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: ubuntu:latest
+
+%post
+    # Install dependencies
+    apt-get update && apt-get install -y p7zip-full
+
+    # singularity build 7z_container.sif 7z_container.def
+    # singularity shell 7z_container.sif

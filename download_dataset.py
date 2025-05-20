@@ -7,7 +7,12 @@ import multiprocessing
 # Replace with your Zenodo access token
 ACCESS_TOKEN = ""
 if ACCESS_TOKEN == "":
-    print("Please set your Zenodo access token in the script.")
+    try:
+        with open("token.txt", "r") as token_file:
+            ACCESS_TOKEN = token_file.read().strip()
+    except FileNotFoundError:
+        print("Token file 'token.txt' not found. Please create the file and add your Zenodo access token or set the ACCESS_TOKEN variable in the script.")
+        exit()
     exit()
 
 record_id = "14223624" #LUNA25 record id
