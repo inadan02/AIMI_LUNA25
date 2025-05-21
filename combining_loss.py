@@ -1,4 +1,4 @@
-from new_loss import FocalLoss
+from focal_loss import FocalLoss
 import torch
 import torch.nn as nn
 

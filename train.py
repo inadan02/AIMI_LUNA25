@@ -15,9 +15,9 @@ import pandas
 from experiment_config import config
 from datetime import datetime
 import argparse
-import new_loss
 import combining_loss
 from models.res_net import ResNet3D_MC3
+from models.CRnets import CRNet
 from focal_loss import FocalLoss
 
 
@@ -111,19 +111,30 @@ def train(
 
     device = torch.device("cuda:0")
 
-    if config.MODE == "2D":
+    if config.MODEL == "2D":
         model = ResNet18().to(device)
-    # elif config.MODE == "3D":
-    #     model = I3D(
-    #         num_classes=1,
-    #         input_channels=3,
-    #         pre_trained=True,
-    #         freeze_bn=True,
-    #     ).to(device)
-    elif config.MODE == "3D":
+    elif config.MODEL == "3D":
+        model = I3D(
+            num_classes=1,
+            input_channels=3,
+            pre_trained=True,
+            freeze_bn=True,
+        ).to(device)
+    elif config.MODEL == "ResNet3D_MC3":
         model = ResNet3D_MC3(
             num_classes=1,
             pretrained=True,
+        ).to(device)
+    elif config.MODEL == "CRNet":
+        model = CRNet(
+            device_ids=[0],
+            input_device= device,
+            output_device= device,
+            img_size= config.PATCH_SIZE,
+            down_out_channel_list = [32, 64, 128],
+            num_layers = 3,
+            hidden_dim_list = [32, 64, 128],
+            kernel_size_list = [3, 3, 3]
         ).to(device)
 
 
@@ -131,6 +142,7 @@ def train(
     loss_function = torch.nn.BCEWithLogitsLoss(pos_weight=torch.tensor([10.0], device=device))
     #loss_function = FocalLoss(alpha=0.25, gamma=2.0).to(device)
     #loss_function = combining_loss.ComboLoss(alpha=0.3, gamma=2.0, dice_weight=0.0).to(device)
+
     optimizer = torch.optim.AdamW(
         model.parameters(),
         lr=config.LEARNING_RATE,

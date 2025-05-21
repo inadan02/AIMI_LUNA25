@@ -4,6 +4,10 @@ import torch.nn.functional as F
 
 class FocalLoss(nn.Module):
     def __init__(self, alpha=0.25, gamma=2.0, reduction="mean"):
+        """
+        alpha: balance between classes (e.g., 0.25 for rare class)
+        gamma: focuses on hard examples
+        """
         super(FocalLoss, self).__init__()
         self.alpha = alpha
         self.gamma = gamma

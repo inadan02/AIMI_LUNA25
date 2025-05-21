@@ -5,18 +5,24 @@ class Configuration(object):
     def __init__(self) -> None:
 
         # Working directory
-        self.WORKDIR = Path("C:/Users/Ina/AI_Medical_Imaging/luna25-baseline-public-main")
-        self.RESOURCES = Path("C:/Users/Ina/AI_Medical_Imaging/luna25-baseline-public-main/resources")
+        #self.WORKDIR = Path("C:/Users/Ina/AI_Medical_Imaging/luna25-baseline-public-main")
+        self.WORKDIR = Path("./")
+        
+        #self.RESOURCES = Path("C:/Users/Ina/AI_Medical_Imaging/luna25-baseline-public-main/resources")
+        self.RESOURCES = Path("./resources")
+        
         # Starting weights for the I3D model
-        self.MODEL_RGB_I3D = (
-            self.RESOURCES / "model_rgb.pth"
-        )
+        self.MODEL_RGB_I3D = (self.RESOURCES / "model_rgb.pth")
         
         # Data parameters
         # Path to the nodule blocks folder provided for the LUNA25 training data. 
-        self.DATADIR = Path("C:/Users/Ina/AI_Medical_Imaging/dataset/luna25_nodule_blocks/luna25_nodule_blocks")
+        #self.DATADIR = Path("C:/Users/Ina/AI_Medical_Imaging/dataset/luna25_nodule_blocks/luna25_nodule_blocks")
+        self.DATADIR = Path("/vol/csedu-nobackup/course/IMC037_aimi/group07/luna25_nodule_blocks/luna25_nodule_blocks")
+        
         # Path to the folder containing the CSVs for training and validation.
-        self.CSV_DIR = Path("C:/Users/Ina/AI_Medical_Imaging")
+        #self.CSV_DIR = Path("C:/Users/Ina/AI_Medical_Imaging")
+        self.CSV_DIR = Path("./")
+
         # We provide an NLST dataset CSV, but participants are responsible for splitting the data into training and validation sets.
         self.CSV_DIR_TRAIN = self.CSV_DIR / "train.csv" # Path to the training CSV
         self.CSV_DIR_VALID = self.CSV_DIR / "valid.csv" # Path to the validation CSV
@@ -26,8 +32,9 @@ class Configuration(object):
         if not self.EXPERIMENT_DIR.exists():
             self.EXPERIMENT_DIR.mkdir(parents=True)
             
-        self.EXPERIMENT_NAME = "LUNA25-baseline"
+        self.EXPERIMENT_NAME = "LUNA25-CRNet"
         self.MODE = "3D" # 2D or 3D
+        self.MODEL = "CRNet"
 
         # Training parameters
         self.SEED = 2025
@@ -35,11 +42,11 @@ class Configuration(object):
         self.SIZE_MM = 50
         self.SIZE_PX = 64
         self.BATCH_SIZE = 32
-        self.ROTATION = ((-20, 20), (-20, 20), (-20, 20))
-        #self.ROTATION = ((-180, 180), (-180, 180), (-180, 180))
+        #self.ROTATION = ((-20, 20), (-20, 20), (-20, 20))
+        self.ROTATION = ((-180, 180), (-180, 180), (-180, 180))
         self.TRANSLATION = True
-        self.EPOCHS = 20
-        self.PATIENCE = 10
+        self.EPOCHS = 50
+        self.PATIENCE = 5
         self.PATCH_SIZE = [64, 128, 128]
         self.LEARNING_RATE = 1e-4
         #self.LEARNING_RATE = 2e-5
