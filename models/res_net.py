@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision.models.video import mc3_18, MC3_18_Weights
 
-class ResNet3D_MC3(nn.Module):
+class ResNet3D_MC3(nn.Module): #for 3D model
     def __init__(self, num_classes=1, pretrained=True):
         super(ResNet3D_MC3, self).__init__()
         self.backbone = mc3_18(pretrained=pretrained)

@@ -19,7 +19,9 @@ import new_loss
 import combining_loss
 from models.res_net import ResNet3D_MC3
 from focal_loss import FocalLoss
-
+from models.resnet50_2d import ResNet50
+from models.efficientnet_2d import EfficientNetB0
+from models.efficientnet_b3_2d import EfficientNetB3_MLP
 
 torch.backends.cudnn.benchmark = True
 
@@ -112,7 +114,10 @@ def train(
     device = torch.device("cuda:0")
 
     if config.MODE == "2D":
-        model = ResNet18().to(device)
+        #model = ResNet18().to(device)
+        #model=ResNet50().to(device)
+        #model=EfficientNetB0().to(device)
+        model=EfficientNetB3_MLP().to(device)
     # elif config.MODE == "3D":
     #     model = I3D(
     #         num_classes=1,

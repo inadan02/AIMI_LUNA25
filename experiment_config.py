@@ -27,19 +27,21 @@ class Configuration(object):
             self.EXPERIMENT_DIR.mkdir(parents=True)
             
         self.EXPERIMENT_NAME = "LUNA25-baseline"
-        self.MODE = "3D" # 2D or 3D
+        self.MODE = "2D" # 2D or 3D
 
         # Training parameters
         self.SEED = 2025
         self.NUM_WORKERS = 8
         self.SIZE_MM = 50
         self.SIZE_PX = 64
+        #self.SIZE_PX = 224
+        self.SIZE_PX = 64
         self.BATCH_SIZE = 32
         self.ROTATION = ((-20, 20), (-20, 20), (-20, 20))
         #self.ROTATION = ((-180, 180), (-180, 180), (-180, 180))
         self.TRANSLATION = True
-        self.EPOCHS = 20
-        self.PATIENCE = 10
+        self.EPOCHS = 40
+        self.PATIENCE = 20
         self.PATCH_SIZE = [64, 128, 128]
         self.LEARNING_RATE = 1e-4
         #self.LEARNING_RATE = 2e-5
