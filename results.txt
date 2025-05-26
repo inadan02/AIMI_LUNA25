@@ -1,0 +1,100 @@
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-45, 45), (-45, 45), (-45, 45)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 1024, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][03:33:25] train completed, best_metric: 0.9049 at epoch: 36
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-90, 90), (-90, 90), (-90, 90)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][11:40:15] train completed, best_metric: 0.8993 at epoch: 32
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-100, 100), (-100, 100), (-100, 100)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 2048, 'depth': 6, 'heads': 8, 'mlp_dim': 4096, 'dropout': 0.1, 'emb_dropout': 0}})
+[INFO][03:27:22] train completed, best_metric: 0.8964 at epoch: 24
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-40, 40), (-40, 40), (-40, 40)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 4, 'heads': 8, 'mlp_dim': 1024, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][04:28:24] train completed, best_metric: 0.8964 at epoch: 42
+
+Configuration('BATCH_SIZE': 64, 'ROTATION': ((-90, 90), (-90, 90), (-90, 90)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0001, 'LOSS': 'BCE', 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 8, 'frame_patch_size': 8, 'dim': 1024, 'depth': 8, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.1, 'emb_dropout': 0}})
+[INFO][12:32:06] train completed, best_metric: 0.8956 at epoch: 39
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-55, 55), (-55, 55), (-55, 55)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 1024, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][03:48:27] train completed, best_metric: 0.8954 at epoch: 22
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-40, 40), (-40, 40), (-40, 40)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'POS_WEIGHT': 10.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 512, 'depth': 6, 'heads': 8, 'mlp_dim': 1024, 'dropout': 0.2, 'emb_dropout': 0.1}})
+[INFO][06:57:51] train completed, best_metric: 0.8954 at epoch: 30
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-40, 40), (-40, 40), (-40, 40)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE_pos_weight', 'POS_WEIGHT': 10.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 8, 'heads': 8, 'mlp_dim': 1024, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][04:23:15] train completed, best_metric: 0.8952 at epoch: 28
+
+Configuration('BATCH_SIZE': 64, 'ROTATION': ((-90, 90), (-90, 90), (-90, 90)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0001, 'LOSS': 'BCE_pos_weight', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 8, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.2, 'emb_dropout': 0}})
+[INFO][12:53:59] train completed, best_metric: 0.8949 at epoch: 30
+
+Configuration('BATCH_SIZE': 64, 'ROTATION': ((-100, 100), (-100, 100), (-100, 100)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 1e-05, 'WEIGHT_DECAY': 1e-05, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 2048, 'depth': 6, 'heads': 8, 'mlp_dim': 4096, 'dropout': 0.1, 'emb_dropout': 0}})
+[INFO][02:44:35] train completed, best_metric: 0.8939 at epoch: 23
+
+Configuration('BATCH_SIZE': 64, 'ROTATION': ((-90, 90), (-90, 90), (-90, 90)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 1e-05, 'WEIGHT_DECAY': 0.0001, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.15, 'emb_dropout': 0.15}})
+[INFO][01:18:58] train completed, best_metric: 0.8936 at epoch: 24
+
+Configuration('BATCH_SIZE': 64, 'ROTATION': ((-90, 90), (-90, 90), (-90, 90)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0001, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 8, 'frame_patch_size': 4, 'dim': 1024, 'depth': 8, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.1, 'emb_dropout': 0}})
+[INFO][01:33:30] train completed, best_metric: 0.8936 at epoch: 38
+
+Configuration('BATCH_SIZE': 64, 'ROTATION': ((-90, 90), (-90, 90), (-90, 90)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 1e-05, 'WEIGHT_DECAY': 0.0001, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][01:18:43] train completed, best_metric: 0.8934 at epoch: 20
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-90, 90), (-90, 90), (-90, 90)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 8, 'frame_patch_size': 8, 'dim': 1024, 'depth': 8, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][12:15:39] train completed, best_metric: 0.8923 at epoch: 33
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-40, 40), (-40, 40), (-40, 40)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'POS_WEIGHT': 10.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 512, 'depth': 12, 'heads': 8, 'mlp_dim': 1024, 'dropout': 0.2, 'emb_dropout': 0.1}})
+[INFO][06:51:28] train completed, best_metric: 0.8922 at epoch: 32
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-120, 120), (-120, 120), (-120, 120)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 1024, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][03:47:33] train completed, best_metric: 0.8913 at epoch: 30
+
+Configuration('BATCH_SIZE': 64, 'ROTATION': ((-90, 90), (-90, 90), (-90, 90)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 1e-05, 'WEIGHT_DECAY': 1e-05, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 2048, 'depth': 6, 'heads': 8, 'mlp_dim': 4096, 'dropout': 0.1, 'emb_dropout': 0}})
+[INFO][02:35:03] train completed, best_metric: 0.8908 at epoch: 24
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-40, 40), (-40, 40), (-40, 40)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'POS_WEIGHT': 10.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 8, 'heads': 8, 'mlp_dim': 1024, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][04:22:30] train completed, best_metric: 0.8907 at epoch: 15
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-45, 45), (-45, 45), (-45, 45)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 4096, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][03:26:47] train completed, best_metric: 0.8905 at epoch: 24
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-40, 40), (-40, 40), (-40, 40)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'POS_WEIGHT': 10.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 8, 'frame_patch_size': 8, 'dim': 512, 'depth': 6, 'heads': 8, 'mlp_dim': 1024, 'dropout': 0.2, 'emb_dropout': 0.1}})
+[INFO][07:16:29] train completed, best_metric: 0.8898 at epoch: 47
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-40, 40), (-40, 40), (-40, 40)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'POS_WEIGHT': 10.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 1024, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][04:37:17] train completed, best_metric: 0.8890 at epoch: 21
+
+Configuration('BATCH_SIZE': 64, 'ROTATION': ((-180, 180), (-180, 180), (-180, 180)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0001, 'LOSS': 'BCE', 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 8, 'frame_patch_size': 8, 'dim': 1024, 'depth': 8, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.1, 'emb_dropout': 0}})
+[INFO][12:32:54] train completed, best_metric: 0.8878 at epoch: 59
+
+Configuration('BATCH_SIZE': 64, 'ROTATION': ((-100, 100), (-100, 100), (-100, 100)), 'TRANSLATION': False, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 1e-05, 'WEIGHT_DECAY': 1e-05, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 2048, 'depth': 6, 'heads': 8, 'mlp_dim': 4096, 'dropout': 0.1, 'emb_dropout': 0}})
+[INFO][03:19:48] train completed, best_metric: 0.8875 at epoch: 19
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-55, 55), (-55, 55), (-55, 55)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 512, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][03:52:38] train completed, best_metric: 0.8864 at epoch: 12
+
+Configuration('BATCH_SIZE': 64, 'ROTATION': ((-90, 90), (-90, 90), (-90, 90)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0001, 'LOSS': 'BCE_pos_weight', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 8, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.2, 'emb_dropout': 0.2}})
+[INFO][01:34:54] train completed, best_metric: 0.8846 at epoch: 39
+
+Configuration('BATCH_SIZE': 64, 'ROTATION': ((-90, 90), (-90, 90), (-90, 90)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0001, 'LOSS': 'BCE_pos_weight', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 64, 'frame_patch_size': 8, 'dim': 1024, 'depth': 8, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.1, 'emb_dropout': 0}})
+[INFO][12:54:34] train completed, best_metric: 0.8833 at epoch: 29
+
+Configuration('BATCH_SIZE': 64, 'ROTATION': ((-90, 90), (-90, 90), (-90, 90)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0001, 'LOSS': 'BCE', 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 8, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.2, 'emb_dropout': 0.2}})
+[INFO][01:01:43] train completed, best_metric: 0.8831 at epoch: 54
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-40, 40), (-40, 40), (-40, 40)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE_pos_weight', 'POS_WEIGHT': 10.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 4, 'heads': 8, 'mlp_dim': 1024, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][04:10:51] train completed, best_metric: 0.8807 at epoch: 10
+
+Configuration('BATCH_SIZE': 64, 'ROTATION': ((-90, 90), (-90, 90), (-90, 90)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 1e-05, 'WEIGHT_DECAY': 0.0001, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 8, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.15, 'emb_dropout': 0.15}})
+[INFO][01:36:02] train completed, best_metric: 0.8793 at epoch: 55
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-20, 20), (-20, 20), (-20, 20)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 0.0001, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][11:32:24] train completed, best_metric: 0.8743 at epoch: 3
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-20, 20), (-20, 20), (-20, 20)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 0.0001, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 32, 'frame_patch_size': 16, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][11:32:06] train completed, best_metric: 0.8711 at epoch: 4
+
+Configuration('BATCH_SIZE': 32, 'ROTATION': ((-20, 20), (-20, 20), (-20, 20)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 0.0001, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 32, 'frame_patch_size': 16, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.1, 'emb_dropout': 0.1}})
+[INFO][11:25:54] train completed, best_metric: 0.8492 at epoch: 1
+
+
+
+
+

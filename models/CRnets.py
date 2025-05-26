@@ -1,4 +1,5 @@
 # https://github.com/cs123951/Lung-CRNet/blob/main/models.py
+#!/usr/bin/env python3
 
 import time
 import torch

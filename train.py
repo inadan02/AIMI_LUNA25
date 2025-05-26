@@ -17,7 +17,7 @@ from datetime import datetime
 import argparse
 import combining_loss
 from models.res_net import ResNet3D_MC3
-from models.CRnets import CRNet
+from models.vit_3d import ViT
 from focal_loss import FocalLoss
 
 
@@ -125,24 +125,35 @@ def train(
             num_classes=1,
             pretrained=True,
         ).to(device)
-    elif config.MODEL == "CRNet":
-        model = CRNet(
-            device_ids=[0],
-            input_device= device,
-            output_device= device,
-            img_size= config.PATCH_SIZE,
-            down_out_channel_list = [32, 64, 128],
-            num_layers = 3,
-            hidden_dim_list = [32, 64, 128],
-            kernel_size_list = [3, 3, 3]
+    elif config.MODEL == "vit":
+        model = ViT(
+            image_size=config.VIT["image_size"], # image size
+            frames=config.VIT["frames"], # number of frames
+            image_patch_size=config.VIT["image_patch_size"],     # image patch size
+            frame_patch_size=config.VIT["frame_patch_size"],      # frame patch size
+            num_classes=1,
+            dim=config.VIT["dim"],
+            depth=config.VIT["depth"],
+            heads=config.VIT["heads"],
+            mlp_dim=config.VIT["mlp_dim"],
+            dropout=config.VIT["dropout"],
+            emb_dropout=config.VIT["emb_dropout"]
         ).to(device)
+        print(config)
+    else:
+        raise ValueError(f"Unknown model {config.MODEL}")
 
-
-    #loss_function = torch.nn.BCEWithLogitsLoss()
-    loss_function = torch.nn.BCEWithLogitsLoss(pos_weight=torch.tensor([10.0], device=device))
-    #loss_function = FocalLoss(alpha=0.25, gamma=2.0).to(device)
-    #loss_function = combining_loss.ComboLoss(alpha=0.3, gamma=2.0, dice_weight=0.0).to(device)
-
+    if config.LOSS == "BCE":
+        loss_function = torch.nn.BCEWithLogitsLoss()
+    elif config.LOSS == "BCE_pos_weight":
+        loss_function = torch.nn.BCEWithLogitsLoss(pos_weight=torch.tensor([config.POS_WEIGHT], device=device))
+    elif config.LOSS == "Focal":
+        loss_function = FocalLoss(alpha=0.25, gamma=2.0).to(device)
+    elif config.LOSS == "Combo":
+        loss_function = combining_loss.ComboLoss(alpha=0.3, gamma=2.0, dice_weight=0.0).to(device)
+    else:
+        raise ValueError(f"Unknown loss function {config.LOSS}")
+    
     optimizer = torch.optim.AdamW(
         model.parameters(),
         lr=config.LEARNING_RATE,
@@ -268,6 +279,7 @@ def train(
             best_metric, best_metric_epoch
         )
     )
+
 
 
 if __name__ == "__main__":

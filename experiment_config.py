@@ -17,8 +17,9 @@ class Configuration(object):
         # Data parameters
         # Path to the nodule blocks folder provided for the LUNA25 training data. 
         #self.DATADIR = Path("C:/Users/Ina/AI_Medical_Imaging/dataset/luna25_nodule_blocks/luna25_nodule_blocks")
-        self.DATADIR = Path("/vol/csedu-nobackup/course/IMC037_aimi/group07/luna25_nodule_blocks/luna25_nodule_blocks")
-        
+        #self.DATADIR = Path("/vol/csedu-nobackup/course/IMC037_aimi/group07/luna25_nodule_blocks/")
+        self.DATADIR = Path("/d/hpc/projects/FRI/cb17769/luna25_nodule_blocks")
+
         # Path to the folder containing the CSVs for training and validation.
         #self.CSV_DIR = Path("C:/Users/Ina/AI_Medical_Imaging")
         self.CSV_DIR = Path("./")
@@ -32,9 +33,9 @@ class Configuration(object):
         if not self.EXPERIMENT_DIR.exists():
             self.EXPERIMENT_DIR.mkdir(parents=True)
             
-        self.EXPERIMENT_NAME = "LUNA25-CRNet"
+        self.EXPERIMENT_NAME = "LUNA25-ViT"
         self.MODE = "3D" # 2D or 3D
-        self.MODEL = "CRNet"
+        self.MODEL = "vit"
 
         # Training parameters
         self.SEED = 2025
@@ -42,17 +43,35 @@ class Configuration(object):
         self.SIZE_MM = 50
         self.SIZE_PX = 64
         self.BATCH_SIZE = 32
-        #self.ROTATION = ((-20, 20), (-20, 20), (-20, 20))
-        self.ROTATION = ((-180, 180), (-180, 180), (-180, 180))
+        self.ROTATION = ((-45, 45), (-45, 45), (-45, 45))
+        #self.ROTATION = ((-180, 180), (-180, 180), (-180, 180))
         self.TRANSLATION = True
-        self.EPOCHS = 50
-        self.PATIENCE = 5
+        self.EPOCHS = 100
+        self.PATIENCE = 10
         self.PATCH_SIZE = [64, 128, 128]
-        self.LEARNING_RATE = 1e-4
-        #self.LEARNING_RATE = 2e-5
+        #self.LEARNING_RATE = 1e-4
+        self.LEARNING_RATE = 2e-5
+        #self.WEIGHT_DECAY = 5e-4
         self.WEIGHT_DECAY = 5e-4
 
+        self.LOSS = "BCE"
+        self.POS_WEIGHT = 10.0
 
+        # Model parameters
+        self.VIT = {
+            "image_size": (self.PATCH_SIZE[1], self.PATCH_SIZE[2]), # image size
+            "frames": self.PATCH_SIZE[0], # number of frames
+            "image_patch_size": 16,     # image patch size
+            "frame_patch_size": 8,      # frame patch size
+            "dim": 1024,  
+            "depth": 6,
+            "heads": 8,
+            "mlp_dim": 1024,
+            "dropout": 0.1,
+            "emb_dropout": 0.1
+        }
 
+    def __repr__(self):
+        return f"Configuration({self.__dict__})"
 
 config = Configuration()
