@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import multiprocessing
 
 # Replace with your Zenodo access token
-ACCESS_TOKEN = "0ee7c29576f9f94f2b5515fa2541732118882d12"
+ACCESS_TOKEN = ""
 if ACCESS_TOKEN == "":
     try:
         with open("token.txt", "r") as token_file:

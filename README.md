@@ -1,12 +1,3 @@
-# 📦 LUNA25 Baseline Algorithm
-Thank you for participating in the [LUNA25 Challenge](https://luna25.grand-challenge.org/).
-
-In LUNA25, we want to use artificial intelligence for lung nodule malignancy risk estimation on low-dose chest CT scans. For this, we have prepared two baseline models (2D and 3D model) that can help you get started. 
-
-The development of your algorithms should be performed using your local GPU or a cloud platform (such as AWS or Azure), while algorithm evaluation will be performed exclusively on the [Grand-Challenge](https://grand-challenge.org/) platform.
-
-## 🗂️ Content
-This baseline algorithm provides a framework for training and testing models. While it includes basic scripts, we encourage you to extend and customize them to develop alternative or improved methods.
 
 Important Files:
 - 🦾 `train.py`: A script for training the baseline algorithm on local data.
@@ -38,7 +29,7 @@ To set up the required environment for the baseline algorithm:
 Open `experiment_config.py` to edit your training configurations. Key parameters include:
 
 - `self.MODE`: Set this to 2D or 3D depending on the desired baseline model.
-- `self.EXPERIMENT_NAME`: Specify the name of your experiment (e.g. LUNA25-baseline).
+- `self.EXPERIMENT_NAME`: Specify the name of your experiment 
 - `self.CSV_DIR_TRAIN`: the path to the training csv file
 - `self.DATADIR`: the path where the images are stored
 
@@ -90,14 +81,4 @@ To build the Docker container required for submission to Grand-Challenge run:
 This will output a *.tar.gz file, which can be uploaded to Grand-Challenge.
 More information on testing and deploying your container can be found [here](https://grand-challenge.org/documentation/test-and-deploy-your-container/).
 
-## 🛠️ Extending the Baseline
-While this baseline provides a starting point, participants are encouraged to:
 
-- Implement advanced AI models.
-- Explore alternative data preprocessing and augmentation techniques.
-- perform Ensemble Learning
-- train models using entire or larger CT scan inputs
-
-For questions, refer to the [LUNA25 Challenge Page](https://luna25.grand-challenge.org/).
-
-Good luck!

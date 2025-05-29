@@ -20,9 +20,6 @@ from models.res_net import ResNet3D_MC3
 from models.vit_3d import ViT
 from focal_loss import FocalLoss
 
-from sklearn.model_selection import StratifiedKFold
-from pathlib import Path
-
 
 torch.backends.cudnn.benchmark = True
 
@@ -49,7 +46,6 @@ def make_weights_for_balanced_classes(labels):
 
 def train(
     train_csv_path,
-    valid_csv_path,
     exp_save_root,
 
 ):
@@ -61,10 +57,8 @@ def train(
     random.seed(config.SEED)
 
     logging.info(f"Training with {train_csv_path}")
-    logging.info(f"Validating with {valid_csv_path}")
 
     train_df = pd.read_csv(train_csv_path)
-    valid_df = pd.read_csv(valid_csv_path)
 
     print()
 
@@ -75,12 +69,6 @@ def train(
         f"Number of benign training samples: {len(train_df) - train_df.label.sum()}"
     )
     print()
-    logging.info(
-        f"Number of malignant validation samples: {valid_df.label.sum()}"
-    )
-    logging.info(
-        f"Number of benign validation samples: {len(valid_df) - valid_df.label.sum()}"
-    )
 
     # create a training data loader
     weights = make_weights_for_balanced_classes(train_df.label.values)
@@ -96,18 +84,6 @@ def train(
         batch_size=config.BATCH_SIZE,
         rotations=config.ROTATION,
         translations=config.TRANSLATION,
-        size_mm=config.SIZE_MM,
-        size_px=config.SIZE_PX,
-    )
-
-    valid_loader = get_data_loader(
-        config.DATADIR,
-        valid_df,
-        mode=config.MODE,
-        workers=config.NUM_WORKERS,
-        batch_size=config.BATCH_SIZE,
-        rotations=None,
-        translations=None,
         size_mm=config.SIZE_MM,
         size_px=config.SIZE_PX,
     )
@@ -167,15 +143,9 @@ def train(
     best_metric = -1
     best_metric_epoch = -1
     epochs = config.EPOCHS
-    patience = config.PATIENCE
     counter = 0
 
     for epoch in range(epochs):
-
-        if counter > patience:
-            logging.info(f"Model not improving for {patience} epochs")
-            break
-
         logging.info("-" * 10)
         logging.info("epoch {}/{}".format(epoch + 1, epochs))
 
@@ -207,76 +177,26 @@ def train(
             "epoch {} average train loss: {:.4f}".format(epoch + 1, epoch_loss)
         )
 
-        # validate
-
-        model.eval()
-
-        epoch_loss = 0
-        step = 0
-
-        with torch.no_grad():
-
-            y_pred = torch.tensor([], dtype=torch.float32, device=device)
-            y = torch.tensor([], dtype=torch.float32, device=device)
-            for val_data in valid_loader:
-                step += 1
-                val_images, val_labels = (
-                    val_data["image"].to(device),
-                    val_data["label"].to(device),
-                )
-                val_images = val_images.to(device)
-                val_labels = val_labels.float().to(device)
-                outputs = model(val_images)
-                loss = loss_function(outputs.squeeze(), val_labels.squeeze())
-                epoch_loss += loss.item()
-                y_pred = torch.cat([y_pred, outputs], dim=0)
-                y = torch.cat([y, val_labels], dim=0)
-
-                epoch_len = len(valid_df) // valid_loader.batch_size
-
-            epoch_loss /= step
-            logging.info(
-                "epoch {} average valid loss: {:.4f}".format(epoch + 1, epoch_loss)
-            )
-
-            y_pred = torch.sigmoid(y_pred.reshape(-1)).data.cpu().numpy().reshape(-1)
-            y = y.data.cpu().numpy().reshape(-1)
-
-            fpr, tpr, _ = metrics.roc_curve(y, y_pred)
-            auc_metric = metrics.auc(fpr, tpr)
-
-            if auc_metric > best_metric:
-
-                counter = 0
-                best_metric = auc_metric
-                best_metric_epoch = epoch + 1
-
-                torch.save(
-                    model.state_dict(),
-                    exp_save_root / "best_metric_model.pth",
-                )
-
-                metadata = {
-                    "train_csv": train_csv_path,
-                    "valid_csv": valid_csv_path,
-                    "config": config,
-                    "best_auc": best_metric,
-                    "epoch": best_metric_epoch,
-                }
-                np.save(
-                    exp_save_root / "config.npy",
-                    metadata,
-                )
-
-                logging.info("saved new best metric model")
-
-            logging.info(
-                "current epoch: {} current AUC: {:.4f} best AUC: {:.4f} at epoch {}".format(
-                    epoch + 1, auc_metric, best_metric, best_metric_epoch
-                )
-            )
         counter += 1
 
+    torch.save(
+        model.state_dict(),
+        exp_save_root / "best_metric_model.pth",
+    )
+
+    metadata = {
+        "train_csv": train_csv_path,
+        "config": config,
+        "best_auc": best_metric,
+        "epoch": best_metric_epoch,
+    }
+    np.save(
+        exp_save_root / "config.npy",
+        metadata,
+    )
+
+    logging.info("saved new best metric model")
+    
     logging.info(
         "train completed, best_metric: {:.4f} at epoch: {}".format(
             best_metric, best_metric_epoch
@@ -286,49 +206,12 @@ def train(
 
 if __name__ == "__main__":
 
-    if config.CSV_DIR_VALID is not None:
-        experiment_name = f"{config.EXPERIMENT_NAME}-{config.MODE}-{datetime.today().strftime('%Y%m%d')}"
-        exp_save_root = config.EXPERIMENT_DIR / experiment_name
-        exp_save_root.mkdir(parents=True, exist_ok=True)
+    experiment_name = f"{config.EXPERIMENT_NAME}-{config.MODE}-{datetime.today().strftime('%Y%m%d')}"
+    exp_save_root = config.EXPERIMENT_DIR / experiment_name
+    exp_save_root.mkdir(parents=True, exist_ok=True)
 
-        # Standard training run
-        train(
-            train_csv_path=config.CSV_DIR_TRAIN,
-            valid_csv_path=config.CSV_DIR_VALID,
-            exp_save_root=exp_save_root,
-        )
-
-    else:
-        # Load full dataset
-        df = pd.read_csv(config.CSV_DIR_TRAIN)
-
-        # Create patient-level summary with single label per patient
-        patient_labels = df.groupby("PatientID")["label"].max().reset_index()
-
-        skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=config.SEED)
-
-        for fold_idx, (train_idx, val_idx) in enumerate(skf.split(patient_labels["PatientID"], patient_labels["label"])):
-            train_patients = patient_labels.iloc[train_idx]
-            val_patients = patient_labels.iloc[val_idx]
-
-            train_df = df[df['PatientID'].isin(train_patients['PatientID'])]
-            val_df = df[df['PatientID'].isin(val_patients['PatientID'])]
-
-            # Create fold-specific experiment dir
-            fold_name = f"{config.EXPERIMENT_NAME}-{config.MODE}-fold{fold_idx}-{datetime.today().strftime('%Y%m%d')}"
-            fold_exp_dir = config.EXPERIMENT_DIR / fold_name
-            Path(fold_exp_dir).mkdir(parents=True, exist_ok=True)
-
-            # Save CSVs
-            train_csv_path = fold_exp_dir / "train.csv"
-            val_csv_path = fold_exp_dir / "valid.csv"
-            train_df.to_csv(train_csv_path, index=False)
-            val_df.to_csv(val_csv_path, index=False)
-
-            print(f"Starting training for fold {fold_idx}")
-
-            train(
-                train_csv_path=train_csv_path,
-                valid_csv_path=val_csv_path,
-                exp_save_root=fold_exp_dir,
-            )
+    # Standard training run
+    train(
+        train_csv_path=config.CSV_DIR_TRAIN,
+        exp_save_root=exp_save_root,
+    )
