@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 📦 LUNA25 Baseline Algorithm
 Thank you for participating in the [LUNA25 Challenge](https://luna25.grand-challenge.org/).
 
@@ -102,6 +101,3 @@ While this baseline provides a starting point, participants are encouraged to:
 For questions, refer to the [LUNA25 Challenge Page](https://luna25.grand-challenge.org/).
 
 Good luck!
-=======
-# AIMI_LUNA25
->>>>>>> 0ee7c29576f9f94f2b5515fa2541732118882d12

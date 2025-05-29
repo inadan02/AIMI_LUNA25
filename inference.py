@@ -251,6 +251,8 @@ def _show_torch_cuda_info():
 
 if __name__ == "__main__":
     mode = "3D"
-    model_name = "LUNA25-baseline-3D-20250509"
+    
+    # model_name can be either a single model name or a list of model names (ENSEMBLE)
+    model_name = "LUNA25-ViT-10-3D-fold0-20250528"
     raise SystemExit(run(mode= mode,
                          model_name=model_name))

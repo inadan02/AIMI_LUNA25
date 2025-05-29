@@ -8,6 +8,7 @@ import torch.nn as nn
 from torchvision import models
 from models.model_3d import I3D
 from models.model_2d import ResNet18
+from models.vit_3d import ViT
 import os
 import math
 import logging
@@ -39,7 +40,20 @@ class MalignancyProcessor:
         if self.mode == "2D":
             self.model_2d = ResNet18(weights=None).cuda()
         elif self.mode == "3D":
-            self.model_3d = I3D(num_classes=1, pre_trained=False, input_channels=3).cuda()
+            #self.model_3d = I3D(num_classes=1, pre_trained=False, input_channels=3).cuda()
+            self.model_3d = ViT(
+                image_size=(128, 128),
+                image_patch_size=16,
+                frames=64,
+                frame_patch_size=8,
+                dim=1024,
+                depth=6,
+                heads=8,
+                mlp_dim=1024,
+                dropout=0.1,
+                emb_dropout=0.1,
+                num_classes=1
+            ).cuda()
 
         self.model_root = "/opt/app/resources/"
 
@@ -73,7 +87,7 @@ class MalignancyProcessor:
         patch = dataloader.clip_and_scale(patch)
         return patch
 
-    def _process_model(self, mode):
+    def _process_model(self, mode, model_name):
 
         if not self.suppress_logs:
             logging.info("Processing in " + mode)
@@ -98,7 +112,7 @@ class MalignancyProcessor:
         ckpt = torch.load(
             os.path.join(
                 self.model_root,
-                self.model_name,
+                model_name,
                 "best_metric_model.pth",
             ),
             map_location="cuda:0"
@@ -110,10 +124,22 @@ class MalignancyProcessor:
 
         logits = np.array(logits)
         return logits
-
+    
     def predict(self):
+        if isinstance(self.model_name, list):
+            logits_list = []
+            for model_name in self.model_name:
+                logits = self._process_model(self.mode, model_name) 
+                logits_list.append(logits)
 
-        logits = self._process_model(self.mode)
+            # Stack logits from each model: shape (num_models, num_samples, num_classes)
+            stacked_logits = np.stack(logits_list, axis=0)
 
-        probability = torch.sigmoid(torch.from_numpy(logits)).numpy()
-        return probability, logits
+            # Average logits across models: shape (num_samples, num_classes)
+            avg_logits = np.mean(stacked_logits, axis=0)
+        else:
+            avg_logits = self._process_model(self.mode, self.model_name)
+
+        # Convert to probability
+        probability = torch.sigmoid(torch.from_numpy(avg_logits)).numpy()
+        return probability, avg_logits
