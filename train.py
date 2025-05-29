@@ -11,7 +11,7 @@ import sklearn.metrics as metrics
 from tqdm import tqdm
 import warnings
 import random
-import pandas
+import pandas as pd
 from experiment_config import config
 from datetime import datetime
 import argparse
@@ -19,6 +19,9 @@ import combining_loss
 from models.res_net import ResNet3D_MC3
 from models.vit_3d import ViT
 from focal_loss import FocalLoss
+
+from sklearn.model_selection import StratifiedKFold
+from pathlib import Path
 
 
 torch.backends.cudnn.benchmark = True
@@ -60,8 +63,8 @@ def train(
     logging.info(f"Training with {train_csv_path}")
     logging.info(f"Validating with {valid_csv_path}")
 
-    train_df = pandas.read_csv(train_csv_path)
-    valid_df = pandas.read_csv(valid_csv_path)
+    train_df = pd.read_csv(train_csv_path)
+    valid_df = pd.read_csv(valid_csv_path)
 
     print()
 
@@ -281,18 +284,51 @@ def train(
     )
 
 
-
 if __name__ == "__main__":
 
+    if config.CSV_DIR_VALID is not None:
+        experiment_name = f"{config.EXPERIMENT_NAME}-{config.MODE}-{datetime.today().strftime('%Y%m%d')}"
+        exp_save_root = config.EXPERIMENT_DIR / experiment_name
+        exp_save_root.mkdir(parents=True, exist_ok=True)
 
-    experiment_name = f"{config.EXPERIMENT_NAME}-{config.MODE}-{datetime.today().strftime('%Y%m%d')}"
-
-    exp_save_root = config.EXPERIMENT_DIR / experiment_name
-    exp_save_root.mkdir(parents=True, exist_ok=True)
-
-    # start training run
-    train(
-        train_csv_path=config.CSV_DIR_TRAIN,
-        valid_csv_path=config.CSV_DIR_VALID,
-        exp_save_root=exp_save_root,
+        # Standard training run
+        train(
+            train_csv_path=config.CSV_DIR_TRAIN,
+            valid_csv_path=config.CSV_DIR_VALID,
+            exp_save_root=exp_save_root,
         )
+
+    else:
+        # Load full dataset
+        df = pd.read_csv(config.CSV_DIR_TRAIN)
+
+        # Create patient-level summary with single label per patient
+        patient_labels = df.groupby("PatientID")["label"].max().reset_index()
+
+        skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=config.SEED)
+
+        for fold_idx, (train_idx, val_idx) in enumerate(skf.split(patient_labels["PatientID"], patient_labels["label"])):
+            train_patients = patient_labels.iloc[train_idx]
+            val_patients = patient_labels.iloc[val_idx]
+
+            train_df = df[df['PatientID'].isin(train_patients['PatientID'])]
+            val_df = df[df['PatientID'].isin(val_patients['PatientID'])]
+
+            # Create fold-specific experiment dir
+            fold_name = f"{config.EXPERIMENT_NAME}-{config.MODE}-fold{fold_idx}-{datetime.today().strftime('%Y%m%d')}"
+            fold_exp_dir = config.EXPERIMENT_DIR / fold_name
+            Path(fold_exp_dir).mkdir(parents=True, exist_ok=True)
+
+            # Save CSVs
+            train_csv_path = fold_exp_dir / "train.csv"
+            val_csv_path = fold_exp_dir / "valid.csv"
+            train_df.to_csv(train_csv_path, index=False)
+            val_df.to_csv(val_csv_path, index=False)
+
+            print(f"Starting training for fold {fold_idx}")
+
+            train(
+                train_csv_path=train_csv_path,
+                valid_csv_path=val_csv_path,
+                exp_save_root=fold_exp_dir,
+            )

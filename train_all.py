@@ -1,0 +1,217 @@
+"""
+Script for training a ResNet18 or I3D to classify a pulmonary nodule as benign or malignant.
+"""
+from models.model_2d import ResNet18
+from models.model_3d import I3D
+from dataloader import get_data_loader
+import logging
+import numpy as np
+import torch
+import sklearn.metrics as metrics
+from tqdm import tqdm
+import warnings
+import random
+import pandas as pd
+from experiment_config import config
+from datetime import datetime
+import argparse
+import combining_loss
+from models.res_net import ResNet3D_MC3
+from models.vit_3d import ViT
+from focal_loss import FocalLoss
+
+
+torch.backends.cudnn.benchmark = True
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="[%(levelname)s][%(asctime)s] %(message)s",
+    datefmt="%I:%M:%S",
+)
+
+def make_weights_for_balanced_classes(labels):
+    """Making sampling weights for the data samples
+    :returns: sampling weights for dealing with class imbalance problem
+
+    """
+    n_samples = len(labels)
+    unique, cnts = np.unique(labels, return_counts=True)
+    cnt_dict = dict(zip(unique, cnts))
+
+    weights = []
+    for label in labels:
+        weights.append(n_samples / float(cnt_dict[label]))
+    return weights
+
+
+def train(
+    train_csv_path,
+    exp_save_root,
+
+):
+    """
+    Train a ResNet18 or an I3D model
+    """
+    torch.manual_seed(config.SEED)
+    np.random.seed(config.SEED)
+    random.seed(config.SEED)
+
+    logging.info(f"Training with {train_csv_path}")
+
+    train_df = pd.read_csv(train_csv_path)
+
+    print()
+
+    logging.info(
+        f"Number of malignant training samples: {train_df.label.sum()}"
+    )
+    logging.info(
+        f"Number of benign training samples: {len(train_df) - train_df.label.sum()}"
+    )
+    print()
+
+    # create a training data loader
+    weights = make_weights_for_balanced_classes(train_df.label.values)
+    weights = torch.DoubleTensor(weights)
+    sampler = torch.utils.data.sampler.WeightedRandomSampler(weights, len(train_df))
+
+    train_loader = get_data_loader(
+        config.DATADIR,
+        train_df,
+        mode=config.MODE,
+        sampler=sampler,
+        workers=config.NUM_WORKERS,
+        batch_size=config.BATCH_SIZE,
+        rotations=config.ROTATION,
+        translations=config.TRANSLATION,
+        size_mm=config.SIZE_MM,
+        size_px=config.SIZE_PX,
+    )
+
+    device = torch.device("cuda:0")
+
+    if config.MODEL == "2D":
+        model = ResNet18().to(device)
+    elif config.MODEL == "3D":
+        model = I3D(
+            num_classes=1,
+            input_channels=3,
+            pre_trained=True,
+            freeze_bn=True,
+        ).to(device)
+    elif config.MODEL == "ResNet3D_MC3":
+        model = ResNet3D_MC3(
+            num_classes=1,
+            pretrained=True,
+        ).to(device)
+    elif config.MODEL == "vit":
+        model = ViT(
+            image_size=config.VIT["image_size"], # image size
+            frames=config.VIT["frames"], # number of frames
+            image_patch_size=config.VIT["image_patch_size"],     # image patch size
+            frame_patch_size=config.VIT["frame_patch_size"],      # frame patch size
+            num_classes=1,
+            dim=config.VIT["dim"],
+            depth=config.VIT["depth"],
+            heads=config.VIT["heads"],
+            mlp_dim=config.VIT["mlp_dim"],
+            dropout=config.VIT["dropout"],
+            emb_dropout=config.VIT["emb_dropout"]
+        ).to(device)
+        print(config)
+    else:
+        raise ValueError(f"Unknown model {config.MODEL}")
+
+    if config.LOSS == "BCE":
+        loss_function = torch.nn.BCEWithLogitsLoss()
+    elif config.LOSS == "BCE_pos_weight":
+        loss_function = torch.nn.BCEWithLogitsLoss(pos_weight=torch.tensor([config.POS_WEIGHT], device=device))
+    elif config.LOSS == "Focal":
+        loss_function = FocalLoss(alpha=0.25, gamma=2.0).to(device)
+    elif config.LOSS == "Combo":
+        loss_function = combining_loss.ComboLoss(alpha=0.3, gamma=2.0, dice_weight=0.0).to(device)
+    else:
+        raise ValueError(f"Unknown loss function {config.LOSS}")
+    
+    optimizer = torch.optim.AdamW(
+        model.parameters(),
+        lr=config.LEARNING_RATE,
+        weight_decay=config.WEIGHT_DECAY,
+    )
+
+    # start a typical PyTorch training
+    best_metric = -1
+    best_metric_epoch = -1
+    epochs = config.EPOCHS
+    counter = 0
+
+    for epoch in range(epochs):
+        logging.info("-" * 10)
+        logging.info("epoch {}/{}".format(epoch + 1, epochs))
+
+        # train
+
+        model.train()
+
+        epoch_loss = 0
+        step = 0
+
+        for batch_data in tqdm(train_loader):
+            step += 1
+            inputs, labels = batch_data["image"], batch_data["label"]
+            labels = labels.float().to(device)
+            inputs = inputs.to(device)
+            optimizer.zero_grad()
+            outputs = model(inputs)
+            loss = loss_function(outputs.squeeze(), labels.squeeze())
+            loss.backward()
+            optimizer.step()
+            epoch_loss += loss.item()
+            epoch_len = len(train_df) // train_loader.batch_size
+            if step % 100 == 0:
+                logging.info(
+                    "{}/{}, train_loss: {:.4f}".format(step, epoch_len, loss.item())
+                )
+        epoch_loss /= step
+        logging.info(
+            "epoch {} average train loss: {:.4f}".format(epoch + 1, epoch_loss)
+        )
+
+        counter += 1
+
+    torch.save(
+        model.state_dict(),
+        exp_save_root / "best_metric_model.pth",
+    )
+
+    metadata = {
+        "train_csv": train_csv_path,
+        "config": config,
+        "best_auc": best_metric,
+        "epoch": best_metric_epoch,
+    }
+    np.save(
+        exp_save_root / "config.npy",
+        metadata,
+    )
+
+    logging.info("saved new best metric model")
+    
+    logging.info(
+        "train completed, best_metric: {:.4f} at epoch: {}".format(
+            best_metric, best_metric_epoch
+        )
+    )
+
+
+if __name__ == "__main__":
+
+    experiment_name = f"{config.EXPERIMENT_NAME}-{config.MODE}-{datetime.today().strftime('%Y%m%d')}"
+    exp_save_root = config.EXPERIMENT_DIR / experiment_name
+    exp_save_root.mkdir(parents=True, exist_ok=True)
+
+    # Standard training run
+    train(
+        train_csv_path=config.CSV_DIR_TRAIN,
+        exp_save_root=exp_save_root,
+    )

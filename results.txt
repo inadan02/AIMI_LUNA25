@@ -1,6 +1,26 @@
 Configuration('BATCH_SIZE': 32, 'ROTATION': ((-45, 45), (-45, 45), (-45, 45)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'POS_WEIGHT': 5.0, 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 1024, 'dropout': 0.1, 'emb_dropout': 0.1}})
 [INFO][03:33:25] train completed, best_metric: 0.9049 at epoch: 36
 
+Ensemble results:
+[INFO][04:49:11] train completed, best_metric: 0.8975 at epoch: 25
+[INFO][04:53:52] train completed, best_metric: 0.8476 at epoch: 13
+[INFO][04:59:44] train completed, best_metric: 0.8602 at epoch: 17
+[INFO][05:05:52] train completed, best_metric: 0.8838 at epoch: 20
+[INFO][05:11:27] train completed, best_metric: 0.8709 at epoch: 17
+[INFO][05:17:51] train completed, best_metric: 0.8740 at epoch: 21
+
+Ensemble results 10 folds:
+[INFO][12:23:49] train completed, best_metric: 0.8918 at epoch: 23
+[INFO][12:50:17] train completed, best_metric: 0.8763 at epoch: 41
+[INFO][01:07:45] train completed, best_metric: 0.8527 at epoch: 20
+[INFO][01:24:07] train completed, best_metric: 0.8705 at epoch: 18
+[INFO][01:42:12] train completed, best_metric: 0.8573 at epoch: 13
+[INFO][01:58:29] train completed, best_metric: 0.8466 at epoch: 17
+[INFO][02:10:46] train completed, best_metric: 0.8738 at epoch: 8
+[INFO][02:28:44] train completed, best_metric: 0.8775 at epoch: 21
+[INFO][03:00:32] train completed, best_metric: 0.8711 at epoch: 38
+[INFO][03:47:10] train completed, best_metric: 0.8942 at epoch: 80
+
 Configuration('BATCH_SIZE': 32, 'ROTATION': ((-90, 90), (-90, 90), (-90, 90)), 'TRANSLATION': True, 'EPOCHS': 100, 'PATIENCE': 10, 'PATCH_SIZE': [64, 128, 128], 'LEARNING_RATE': 2e-05, 'WEIGHT_DECAY': 0.0005, 'LOSS': 'BCE', 'VIT': {'image_size': (128, 128), 'frames': 64, 'image_patch_size': 16, 'frame_patch_size': 8, 'dim': 1024, 'depth': 6, 'heads': 8, 'mlp_dim': 2048, 'dropout': 0.1, 'emb_dropout': 0.1}})
 [INFO][11:40:15] train completed, best_metric: 0.8993 at epoch: 32
 

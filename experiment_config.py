@@ -25,15 +25,19 @@ class Configuration(object):
         self.CSV_DIR = Path("./")
 
         # We provide an NLST dataset CSV, but participants are responsible for splitting the data into training and validation sets.
-        self.CSV_DIR_TRAIN = self.CSV_DIR / "train.csv" # Path to the training CSV
-        self.CSV_DIR_VALID = self.CSV_DIR / "valid.csv" # Path to the validation CSV
+        #self.CSV_DIR_TRAIN = self.CSV_DIR / "train.csv" # Path to the training CSV
+        #self.CSV_DIR_VALID = self.CSV_DIR / "valid.csv" # Path to the validation CSV
+
+        # To train the ensemble
+        self.CSV_DIR_TRAIN = self.CSV_DIR / "LUNA25_Public_Training_Development_Data.csv" # Path to the training CSV
+        self.CSV_DIR_VALID = None
 
         # Results will be saved in the /results/ directory, inside a subfolder named according to the specified EXPERIMENT_NAME and MODE.
         self.EXPERIMENT_DIR = self.WORKDIR / "results"
         if not self.EXPERIMENT_DIR.exists():
             self.EXPERIMENT_DIR.mkdir(parents=True)
             
-        self.EXPERIMENT_NAME = "LUNA25-ViT"
+        self.EXPERIMENT_NAME = "LUNA25-ViT-10"
         self.MODE = "3D" # 2D or 3D
         self.MODEL = "vit"
 
@@ -47,10 +51,10 @@ class Configuration(object):
         #self.ROTATION = ((-180, 180), (-180, 180), (-180, 180))
         self.TRANSLATION = True
         self.EPOCHS = 100
-        self.PATIENCE = 10
+        self.PATIENCE = 20
         self.PATCH_SIZE = [64, 128, 128]
         #self.LEARNING_RATE = 1e-4
-        self.LEARNING_RATE = 2e-5
+        self.LEARNING_RATE = 1e-4
         #self.WEIGHT_DECAY = 5e-4
         self.WEIGHT_DECAY = 5e-4
 
