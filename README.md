@@ -1,18 +1,18 @@
-# 📦 LUNA25 Challenge
+# 🫁 LUNA25 Challenge
 
-[LUNA25 Challenge](https://luna25.grand-challenge.org/) uses artificial intelligence for lung nodule malignancy risk estimation on low-dose chest CT scans. 
+[LUNA25 Challenge](https://luna25.grand-challenge.org/) uses artificial intelligence for **lung nodule malignancy risk estimation** on low-dose chest CT scans. 
 
-Accurate malignancy risk estimation of pulmonary nodules is critical for early lung cancer detection and intervention. In this study, we compare multiple 2D and 3D deep learning models on Luna25 dataset using a strict patient-level split to classify pulmonary nodules from low-dose chest CT scans. Among 2D CNNs, Resnet18 (baseline), ResNet50, EfficientNet-B0 achieved top AUC scores close to $0.88$, with a stacked ensemble improving it to $0.89$. The 3D ResNet3D MC3 model, leveraging mixed spatio-temporal convolutions and transfer learning, matched this performance. A 3D Vision Transformer outperformed all other models, showing the highest AUC of $0.90$. These results highlight the benefits of architectural diversity in volumetric medical data 
+Accurate malignancy risk estimation of pulmonary nodules is critical for early lung cancer detection and intervention. In this study, we compare multiple 2D and 3D deep learning models on Luna25 dataset using a strict patient-level split to classify pulmonary nodules from low-dose chest CT scans. Among 2D CNNs, Resnet18 (baseline), ResNet50, EfficientNet-B0 achieved top AUC scores close to $0.88$, with a stacked ensemble improving it to $0.89$. The 3D ResNet3D MC3 model, leveraging mixed spatio-temporal convolutions and transfer learning, matched this performance. A **3D Vision Transformer** outperformed all other models, showing the highest AUC of **$0.90$**. These results highlight the benefits of architectural diversity in volumetric medical data 
 
 ## 🗂️ Content
 This algorithm provides a framework for training and testing models.
 
 Important Files:
-- 🦾 `train.py`: A script for training the algorithm on local data.
-- 🦿 `inference.py`: A script for testing the trained algorithm using a specified configuration.
-- 🧮 `Dockerfile`: A file to build a Docker container for deployment on Grand-Challenge. For help on setting up Docker with GPU support you can check the documentation on [Grand-Challenge](https://grand-challenge.org/documentation/setting-up-wsl-with-gpu-support-for-windows-11/) or [Docker](https://docs.docker.com/engine/install/ubuntu/) for additional information.
+- `train.py`: A script for training the algorithm on local data.
+- `inference.py`: A script for testing the trained algorithm using a specified configuration.
+- `Dockerfile`: A file to build a Docker container for deployment on Grand-Challenge. For help on setting up Docker with GPU support you can check the documentation on [Grand-Challenge](https://grand-challenge.org/documentation/setting-up-wsl-with-gpu-support-for-windows-11/) or [Docker](https://docs.docker.com/engine/install/ubuntu/) for additional information.
 
-## ⚙️ Setting up the Environment
+## 🛠️ Setting up the Environment
 To set up the required environment for the baseline algorithm:
 1. **Create an environment and esure Python is Installed**: Install Python 3.9 or higher:
     ```bash
@@ -31,7 +31,7 @@ To set up the required environment for the baseline algorithm:
     ```
     Ensure all required packages are listed and no errors are reported.
 
-## 🚀 Performing a Training Run
+## 🏋️ Performing a Training Run
 1. **Set up training configurations**
 
 Open `experiment_config.py` to edit your training configurations. Key parameters include:
