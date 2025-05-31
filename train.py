@@ -1,8 +1,6 @@
 """
 Script for training a ResNet18 or I3D to classify a pulmonary nodule as benign or malignant.
 """
-from models.model_2d import ResNet18
-from models.model_3d import I3D
 from dataloader import get_data_loader
 import logging
 import numpy as np
@@ -16,9 +14,19 @@ from experiment_config import config
 from datetime import datetime
 import argparse
 import combining_loss
+from focal_loss import FocalLoss
+
+
+from models.model_2d import ResNet18
+from models.model_3d import I3D
 from models.res_net import ResNet3D_MC3
 from models.vit_3d import ViT
-from focal_loss import FocalLoss
+from models.efficientnet_2d import EfficientNetB0
+from models.efficientnet_b3_2d import EfficientNetB3_MLP
+from models.resnet34_2d import ResNet34
+from models.resnet50_2d import ResNet50
+from models.ensemble2d import Ensemble2D
+
 
 from sklearn.model_selection import StratifiedKFold
 from pathlib import Path
@@ -125,6 +133,22 @@ def train(
 
     if config.MODEL == "2D":
         model = ResNet18().to(device)
+    elif config.MODEL == "EfficientNetB0":
+        model = EfficientNetB0(weights='IMAGENET1K_V1').to(device)
+    elif config.MODEL == "EfficientNetB3":
+        model = EfficientNetB3_MLP(weights='IMAGENET1K_V1').to(device)
+    elif config.MODEL == "ResNet34":
+        model = ResNet34(weights='IMAGENET1K_V1').to(device)
+    elif config.MODEL == "ResNet50":
+        model = ResNet50(weights='IMAGENET1K_V1').to(device)
+    elif config.MODEL == "Ensemble2D":
+        model = Ensemble2D([
+            ResNet18(),
+            EfficientNetB0(weights='IMAGENET1K_V1'),
+            EfficientNetB3_MLP(weights='IMAGENET1K_V1'),
+            ResNet34(weights='IMAGENET1K_V1'),
+            ResNet50(weights='IMAGENET1K_V1')
+        ]).to(device)
     elif config.MODEL == "3D":
         model = I3D(
             num_classes=1,
@@ -137,7 +161,7 @@ def train(
             num_classes=1,
             pretrained=True,
         ).to(device)
-    elif config.MODEL == "vit":
+    elif config.MODEL == "ViT":
         model = ViT(
             image_size=config.VIT["image_size"], # image size
             frames=config.VIT["frames"], # number of frames

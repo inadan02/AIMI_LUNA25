@@ -36,7 +36,7 @@ class Configuration(object):
             
         self.EXPERIMENT_NAME = "LUNA25-ViT"
         self.MODE = "3D" # 2D or 3D
-        self.MODEL = "vit"
+        self.MODEL = "ViT"
 
         # Training parameters
         self.SEED = 2025
