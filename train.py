@@ -64,7 +64,14 @@ def train(
     logging.info(f"Validating with {valid_csv_path}")
 
     train_df = pd.read_csv(train_csv_path)
-    valid_df = pd.read_csv(valid_csv_path)
+
+    if valid_csv_path is None:
+        logging.info("No validation set provided, training on the full dataset")
+        valid_df = None
+    else:
+        valid_df = pd.read_csv(valid_csv_path)
+    
+    validation = valid_df is not None
 
     print()
 
@@ -75,12 +82,13 @@ def train(
         f"Number of benign training samples: {len(train_df) - train_df.label.sum()}"
     )
     print()
-    logging.info(
-        f"Number of malignant validation samples: {valid_df.label.sum()}"
-    )
-    logging.info(
-        f"Number of benign validation samples: {len(valid_df) - valid_df.label.sum()}"
-    )
+    if validation:
+        logging.info(
+            f"Number of malignant validation samples: {valid_df.label.sum()}"
+        )
+        logging.info(
+            f"Number of benign validation samples: {len(valid_df) - valid_df.label.sum()}"
+        )
 
     # create a training data loader
     weights = make_weights_for_balanced_classes(train_df.label.values)
@@ -100,17 +108,18 @@ def train(
         size_px=config.SIZE_PX,
     )
 
-    valid_loader = get_data_loader(
-        config.DATADIR,
-        valid_df,
-        mode=config.MODE,
-        workers=config.NUM_WORKERS,
-        batch_size=config.BATCH_SIZE,
-        rotations=None,
-        translations=None,
-        size_mm=config.SIZE_MM,
-        size_px=config.SIZE_PX,
-    )
+    if validation:
+        valid_loader = get_data_loader(
+            config.DATADIR,
+            valid_df,
+            mode=config.MODE,
+            workers=config.NUM_WORKERS,
+            batch_size=config.BATCH_SIZE,
+            rotations=None,
+            translations=None,
+            size_mm=config.SIZE_MM,
+            size_px=config.SIZE_PX,
+        )
 
     device = torch.device("cuda:0")
 
@@ -172,7 +181,7 @@ def train(
 
     for epoch in range(epochs):
 
-        if counter > patience:
+        if validation and counter > patience:
             logging.info(f"Model not improving for {patience} epochs")
             break
 
@@ -208,6 +217,9 @@ def train(
         )
 
         # validate
+        if not validation:
+            logging.info("No validation set provided, skipping validation")
+            continue
 
         model.eval()
 
@@ -277,16 +289,35 @@ def train(
             )
         counter += 1
 
-    logging.info(
-        "train completed, best_metric: {:.4f} at epoch: {}".format(
-            best_metric, best_metric_epoch
+    # If no validation set was provided, save the final model
+    if not validation:
+        torch.save(
+            model.state_dict(),
+            exp_save_root / "final_model.pth",
         )
-    )
-
-
+        metadata = {
+            "train_csv": train_csv_path,
+            "valid_csv": valid_csv_path,
+            "config": config,
+            "best_auc": best_metric,
+            "epoch": best_metric_epoch,
+        }
+        np.save(
+            exp_save_root / "config.npy",
+            metadata,
+        )
+        logging.info("saved final model")
+        logging.info("Training complete, no validation set provided.")
+    else:
+        logging.info(
+            "train completed, best_metric: {:.4f} at epoch: {}".format(
+                best_metric, best_metric_epoch
+            )
+        )
+        
 if __name__ == "__main__":
 
-    if config.CSV_DIR_VALID is not None:
+    if config.FOLDS is None:
         experiment_name = f"{config.EXPERIMENT_NAME}-{config.MODE}-{datetime.today().strftime('%Y%m%d')}"
         exp_save_root = config.EXPERIMENT_DIR / experiment_name
         exp_save_root.mkdir(parents=True, exist_ok=True)
@@ -305,7 +336,7 @@ if __name__ == "__main__":
         # Create patient-level summary with single label per patient
         patient_labels = df.groupby("PatientID")["label"].max().reset_index()
 
-        skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=config.SEED)
+        skf = StratifiedKFold(n_splits=config.FOLDS, shuffle=True, random_state=config.SEED)
 
         for fold_idx, (train_idx, val_idx) in enumerate(skf.split(patient_labels["PatientID"], patient_labels["label"])):
             train_patients = patient_labels.iloc[train_idx]
