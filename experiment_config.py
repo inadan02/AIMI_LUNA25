@@ -58,8 +58,8 @@ class Configuration(object):
 
         # Model parameters
         self.VIT = {
-            "image_size": (self.PATCH_SIZE[1], self.PATCH_SIZE[2]), # image size
-            "frames": self.PATCH_SIZE[0], # number of frames
+            "image_size": (self.SIZE_PX, self.SIZE_PX), # image size
+            "frames": self.SIZE_PX, # number of frames
             "image_patch_size": 16,     # image patch size
             "frame_patch_size": 8,      # frame patch size
             "dim": 1024,  
