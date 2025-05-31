@@ -131,7 +131,7 @@ Below are the key configuration parameters used in the project:
 
 ```python
 VIT = {
-    "image_size": (128, 128),     # Spatial dimensions (height, width)
+    "image_size": (64, 64),     # Spatial dimensions (height, width)
     "frames": 64,                 # Temporal depth (number of slices/frames)
     "image_patch_size": 16,      
     "frame_patch_size": 8,       
